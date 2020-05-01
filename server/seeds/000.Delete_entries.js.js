@@ -1,0 +1,15 @@
+exports.seed = function (knex) {
+  // Deletes ALL existing entries
+
+  return knex('friends')
+    .del()
+    .then(() => {
+      return knex('posts').del();
+    })
+    .then(() => {
+      return knex('users').del();
+    })
+    .then(() => {
+      return knex('friendship_statuses').del();
+    });
+};
