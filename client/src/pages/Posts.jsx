@@ -39,12 +39,11 @@ const Posts = (props) => {
 
   const getPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/posts', {
-        credentials: 'same-origin',
-      });
+      const response = await axios.get('http://localhost:8080/posts');
       const data = response.data;
 
-      return data;
+      // return data;
+      setPosts(data);
     } catch (err) {
       console.log('Failed:', err.response.data.message);
       setState({
@@ -66,7 +65,8 @@ const Posts = (props) => {
       const data = await response.data;
       // console.log('requests', data);
 
-      return data;
+      setRequests(data);
+      // return data;
     } catch (err) {
       // console.log('Failed:', err.response.data.message);
       setState({
@@ -141,8 +141,8 @@ const Posts = (props) => {
         credentials: 'same-origin',
       });
       const data = response.data;
-
-      return data;
+      setFriends(data);
+      // return data;
     } catch (err) {
       console.log('Failed:', err.response.data.message);
       setState({
@@ -170,6 +170,7 @@ const Posts = (props) => {
         },
       });
       setOpenAlert(true);
+
       return data;
     } catch (err) {
       console.log('Failed:', err.response);
@@ -199,7 +200,7 @@ const Posts = (props) => {
         },
       });
       setOpenAlert(true);
-      return data;
+      setPosts(data);
     } catch (err) {
       console.log('Failed:', err.response.data.message);
       setState({
@@ -215,33 +216,35 @@ const Posts = (props) => {
   const onAddPost = (data) => {
     // console.log(data);
     // console.log(user.id);
-    addPost(data).then(() => getPosts().then((res) => setPosts(res)));
+    addPost(data).then(() => getPosts());
   };
 
   useEffect(() => {
-    getPosts().then((res) => setPosts(res));
-    getFriends().then((res) => setFriends(res));
-    getRequests().then((res) => setRequests(res));
+    getPosts();
+    getFriends();
+    getRequests();
+    // getFriends().then((res) => setFriends(res));
+    // getRequests().then((res) => setRequests(res));
+
     const interval = setInterval(function () {
-      getRequests().then((res) => setRequests(res));
-      getPosts().then((res) => setPosts(res));
-      getFriends().then((res) => setFriends(res));
+      getRequests();
+      getPosts();
+      getFriends();
     }, 10000);
+    
     return () => clearInterval(interval);
   }, []);
 
   const onAddFriend = (data) => {
-    addFriend(data).then(() => getFriends().then((res) => setFriends(res)));
+    addFriend(data).then(() => getFriends());
   };
 
   const onRemoveFriend = (data) => {
-    declineRequest(data).then(() =>
-      getFriends().then((res) => setFriends(res))
-    );
+    declineRequest(data).then(() => getFriends());
   };
 
   const onAcceptRequest = (data) => {
-    acceptRequest(data).then(() => getFriends().then((res) => setFriends(res)));
+    acceptRequest(data).then(() => getFriends());
   };
 
   // console.log('friends', friends);

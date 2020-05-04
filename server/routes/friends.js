@@ -7,12 +7,12 @@ const Friendship_status = require('../models/Friendship_status');
 // Get all my friends
 router.get('/friends/', async (req, res) => {
   //get id from url
-  if (!sess) {
+  if (!req.session.user) {
     return res.status(401).send({
       message: 'You cant access this endpoint without being authenticated',
     });
   }
-  const userId = sess.id;
+  const userId = req.session.user.id;
   // console.log(userId);
   //check if it's not a number
   if (!isNaN(userId)) {
@@ -61,12 +61,12 @@ router.get('/friends/', async (req, res) => {
 
 // Get pending friendship requests
 router.get('/friends/pending', async (req, res) => {
-  if (!sess) {
+  if (!req.session.user) {
     return res.status(401).send({
       message: 'You cant access this endpoint without being authenticated',
     });
   }
-  const userId = sess.id;
+  const userId = req.session.user.id;
 
   try {
     //check if the user exists
@@ -111,14 +111,15 @@ router.get('/friends/pending', async (req, res) => {
 
 router.put('/friends/:statusName/:reqId', async (req, res) => {
   let { statusName, reqId } = req.params;
-  console.log(req.params.reqId);
-  if (!sess) {
+  
+
+  if (!req.session.user) {
     return res.status(401).send({
       message: 'You cant access this endpoint without being authenticated',
     });
   }
 
-  const id = sess.id;
+  const id = req.session.user.id;
   const statusId = await Friendship_status.query()
     .select('id')
     .where({ name: statusName });

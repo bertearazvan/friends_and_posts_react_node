@@ -14,6 +14,10 @@ import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
 import ResetPasswordForm from './pages/ResetPasswordForm';
 import Posts from './pages/Posts';
+import Profile from './pages/Profile';
+
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 const PrivateRoute = ({ component: Component, auth, ...rest }) => {
   return (
@@ -40,7 +44,9 @@ function App() {
     localStorage.getItem('user') ? true : false
   );
 
-  const [userData, setUserData] = React.useState(0);
+  const [userData, setUserData] = React.useState(
+    localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : ''
+  );
 
   return (
     <div>
@@ -79,6 +85,12 @@ function App() {
             exact
             path="/posts"
             component={(props) => <Posts {...props} />}
+          />
+          <PrivateRoute
+            auth={auth}
+            exact
+            path="/profile"
+            component={(props) => <Profile userData={userData} {...props} />}
           />
         </Switch>
       </Router>

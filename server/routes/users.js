@@ -247,7 +247,7 @@ router.post('/users/login', async (req, res) => {
         .limit(1);
 
       const user = users[0];
-      console.log(user);
+
       if (!user) {
         return res.status(404).send({
           message: 'Wrong username',
@@ -267,8 +267,8 @@ router.post('/users/login', async (req, res) => {
             message: 'Wrong password',
           });
         } else {
-          sess = user;
-
+          req.session.user = user;
+          console.log('login', req.session.user);
           return res.send({
             response: user,
           });

@@ -26,13 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NavBar(props) {
   const classes = useStyles();
-
-  let user = {
-    first_name: 'default',
-  };
-  if (localStorage.getItem('user')) {
-    user = JSON.parse(localStorage.getItem('user'));
-  }
+  let user = props.userData;
 
   return (
     <div className={classes.root}>
@@ -51,8 +45,8 @@ export default function NavBar(props) {
           </Typography>
           {props.isAuth ? (
             <Box>
-              <Button color="inherit" disabled>
-                {user.first_name}
+              <Button color="inherit" component={Link} to="/profile">
+                {user ? user.first_name : 'default'}
               </Button>
               <Button color="inherit" component={Link} to="/posts">
                 Posts

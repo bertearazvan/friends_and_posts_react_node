@@ -7,8 +7,7 @@ const Friend = require('../models/Friend');
 
 router.post('/posts', async (req, res) => {
   const { post_title, post_body } = req.body;
-
-  if (!sess) {
+  if (!req.session.user) {
     return res.status(401).send({
       message: 'You cant access this endpoint without being authenticated',
     });
@@ -32,9 +31,11 @@ router.post('/posts', async (req, res) => {
     const newPost = await Post.query().insert({
       post_title: post_title,
       post_body: post_body,
-      owner_id: sess.id,
+      owner_id: req.session.user.id,
     });
-    return res.status(200).send({ message: 'Your post is online' });
+    return res
+      .status(200)
+      .send({ message: 'Your post is online', post: newPost });
   } catch (err) {
     console.log(err);
     return res.status(500).send('Something went wrong');
@@ -45,11 +46,15 @@ router.post('/posts', async (req, res) => {
 //Read all the posts in cronological order
 
 router.get('/posts', async (req, res) => {
-  if (!sess) {
+  // console.log('posts', req.session.user);
+
+  if (!req.session.user) {
     return res.status(401).send({
       message: 'You cant access this endpoint without being authenticated',
     });
   }
+
+  // console.log(req.session.user);
 
   try {
     const posts = await (

@@ -4,7 +4,7 @@ import PostForm from './PostForm';
 import DotLoader from 'react-spinners/DotLoader';
 
 import { makeStyles } from '@material-ui/core/styles';
-import moment from 'moment';
+import moment from 'moment/moment';
 
 const useStyles = makeStyles((theme) => ({
   postsWidth: {

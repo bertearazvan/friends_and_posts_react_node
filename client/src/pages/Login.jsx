@@ -70,7 +70,7 @@ const Login = (props) => {
 
       // if auth then set auth to true and send it to the router
       props.onAuth(true);
-      props.userData(data);
+      props.userData(data.response);
       localStorage.setItem('user', JSON.stringify(data.response));
 
       // push to the page you came from to login
@@ -82,7 +82,7 @@ const Login = (props) => {
       // send the error message and prevent errors due to Material-UI textfield behaviour
       setForm({
         message: {
-          message: err.response.data.message || err.response,
+          message: err.response.data.message || err.response.data,
           type: 'error',
         },
         email: '',

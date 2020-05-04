@@ -1,29 +1,38 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
 //express init
 const app = express();
 
+// Rate limiter
+
+const rateLimit = require('express-rate-limit');
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 100 requests per windowMs
+});
+
 // Middleware config
-app.set('trust proxy', 1);
-app.use(cors());
-app.use(cookieParser('davis jonson'));
 app.use(
-  session({
-    secret: 'davis jonson',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: true },
+  cors({
+    origin: ['http://localhost:8080', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // enable set cookie
   })
 );
-
 app.use(
   express.urlencoded({
     extended: false,
   })
 );
 app.use(express.json());
+app.use(
+  session({
+    secret: 'davis jonson',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 // Routes
 
@@ -31,12 +40,8 @@ const usersRoute = require('./routes/users');
 const friendsRoute = require('./routes/friends');
 const postsRoute = require('./routes/posts');
 // set session variable to keep the same sessionID for the whole app
-let sess;
-app.use('/', (req, res, next) => {
-  sess = req.session;
-  next();
-});
 
+app.use('/users/login', authLimiter);
 app.use(usersRoute);
 app.use(postsRoute);
 app.use(friendsRoute);
