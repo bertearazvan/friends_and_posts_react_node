@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import {} from '@material-ui/core';
 import NavBar from './components/NavBar';
@@ -47,6 +47,24 @@ function App() {
   const [userData, setUserData] = React.useState(
     localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : ''
   );
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/users/session');
+        const data = response.data;
+
+        setAuth(true);
+        setUserData(data.data);
+      } catch (err) {
+        return;
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  //fetch setAuth(true)
 
   return (
     <div>

@@ -231,7 +231,7 @@ const Posts = (props) => {
       getPosts();
       getFriends();
     }, 10000);
-    
+
     return () => clearInterval(interval);
   }, []);
 

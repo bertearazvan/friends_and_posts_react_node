@@ -349,4 +349,20 @@ router.post('/users/register', (req, res) => {
   }
 });
 
+router.get('/users/session', (req, res) => {
+  if (req.session.user) {
+    return res
+      .status(200)
+      .send({ message: 'Successfully logged in!', data: req.session.user });
+  } else {
+    return res.status(401).send({ message: 'You must log in!' });
+  }
+});
+
+router.get('/users/signout', (req, res) => {
+  req.session.destroy();
+
+  res.status(200).send({ message: 'Successfully logged out' });
+});
+
 module.exports = router;

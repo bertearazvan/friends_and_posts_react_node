@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -11,6 +10,7 @@ import {
   Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +26,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NavBar(props) {
   const classes = useStyles();
+  const history = useHistory();
   let user = props.userData;
+
+  const onSignOut = async () => {
+    localStorage.removeItem('user');
+    props.onAuth(false);
+    try {
+      const response = await axios.get('http://localhost:8080/users/signout');
+      const data = response;
+
+      return;
+    } catch (err) {
+      return;
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -55,10 +69,7 @@ export default function NavBar(props) {
                 color="inherit"
                 component={Link}
                 to="/"
-                onClick={() => {
-                  localStorage.removeItem('user');
-                  props.onAuth(false);
-                }}
+                onClick={onSignOut}
               >
                 Sign out
               </Button>

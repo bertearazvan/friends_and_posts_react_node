@@ -47,7 +47,7 @@ router.post('/posts', async (req, res) => {
 
 router.get('/posts', async (req, res) => {
   // console.log('posts', req.session.user);
-
+  
   if (!req.session.user) {
     return res.status(401).send({
       message: 'You cant access this endpoint without being authenticated',

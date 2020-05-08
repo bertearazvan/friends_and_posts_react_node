@@ -12,20 +12,28 @@ const authLimiter = rateLimit({
   max: 5, // limit each IP to 100 requests per windowMs
 });
 
+app.enable('trust proxy');
+
 // Middleware config
 app.use(
   cors({
     origin: ['http://localhost:8080', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true, // enable set cookie
   })
 );
-app.use(
-  express.urlencoded({
-    extended: false,
-  })
-);
-app.use(express.json());
+
+// app.options('*', cors());
+
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   );
+//   next();
+// });
+
 app.use(
   session({
     secret: 'davis jonson',
@@ -33,6 +41,14 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+
+app.use(express.json());
 
 // Routes
 
@@ -42,9 +58,9 @@ const postsRoute = require('./routes/posts');
 // set session variable to keep the same sessionID for the whole app
 
 app.use('/users/login', authLimiter);
-app.use(usersRoute);
 app.use(postsRoute);
 app.use(friendsRoute);
+app.use(usersRoute);
 
 // Setup the database
 
