@@ -13,13 +13,31 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
 import ResetPasswordForm from './pages/ResetPasswordForm';
-import Posts from './pages/Posts';
+import News from './pages/News';
 import Profile from './pages/Profile';
+import PublicProfile from './pages/PublicProfile';
+import SavedArticles from './pages/SavedArticles';
 
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 const PrivateRoute = ({ component: Component, auth, ...rest }) => {
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/users/session');
+        const data = response.data;
+        // console.log(data.data);
+        localStorage.setItem('user', JSON.stringify(data.data));
+        // localStorage.removeItem('user');
+      } catch (err) {
+        return;
+      }
+    };
+
+    checkSession();
+  }, []);
+
   return (
     <Route
       {...rest}
@@ -39,7 +57,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
   );
 };
 
-function App() {
+const App = () => {
   const [auth, setAuth] = React.useState(
     localStorage.getItem('user') ? true : false
   );
@@ -48,33 +66,18 @@ function App() {
     localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : ''
   );
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/users/session');
-        const data = response.data;
-
-        setAuth(true);
-        setUserData(data.data);
-      } catch (err) {
-        return;
-      }
-    };
-
-    checkSession();
-  }, []);
-
   //fetch setAuth(true)
 
   return (
     <div>
-      <Router>
+      <Router basename="/">
         <NavBar
           userData={userData}
           isAuth={auth}
           onAuth={(data) => setAuth(data)}
         />
-
+        <br />
+        <br />
         <Switch>
           <Route
             exact
@@ -95,14 +98,20 @@ function App() {
           </Route>
           <Route
             exact
-            path="/resetForm/:id"
+            path="/resetForm/:token"
             component={(props) => <ResetPasswordForm {...props} />}
           />
           <PrivateRoute
             auth={auth}
             exact
-            path="/posts"
-            component={(props) => <Posts {...props} />}
+            path="/news"
+            component={(props) => <News {...props} />}
+          />
+          <PrivateRoute
+            auth={auth}
+            exact
+            path="/savedArticles"
+            component={(props) => <SavedArticles {...props} />}
           />
           <PrivateRoute
             auth={auth}
@@ -110,10 +119,16 @@ function App() {
             path="/profile"
             component={(props) => <Profile userData={userData} {...props} />}
           />
+          <PrivateRoute
+            auth={auth}
+            exact
+            path="/profile/:id"
+            component={(props) => <PublicProfile {...props} />}
+          />
         </Switch>
       </Router>
     </div>
   );
-}
+};
 
 export default App;

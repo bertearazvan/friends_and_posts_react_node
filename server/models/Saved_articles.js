@@ -2,7 +2,7 @@ const { Model } = require('objection');
 
 class Post extends Model {
   static get tableName() {
-    return 'posts';
+    return 'saved_articles';
   }
 }
 

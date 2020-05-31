@@ -50,7 +50,7 @@ const ResetPassword = () => {
         },
       });
       setOpenAlert(true);
-      console.log('Success:', data.message);
+      // console.log('Success:', data.message);
     } catch (err) {
       console.log('Failed:', err.response.data.message);
       setForm({
@@ -89,7 +89,7 @@ const ResetPassword = () => {
           <h2>Forgot your password?</h2>
           <br />
 
-          <Box className={classes.formWidth}>
+          <Box className={'resetPasswordForm'}>
             <form>
               <TextField
                 variant="outlined"

@@ -8,22 +8,26 @@ import {
   TextField,
   Box,
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   friendsWidth: {
-    width: '30vw',
-
-    margin: '.1rem',
-    marginTop: '1rem',
+    width: '100%',
+    height: '100%',
+    // margin: '1rem',
   },
   card: {
-    width: '30vw',
-    maxWidth: '350px',
+    // width: '100%',
+    // maxWidth: '350px',
     padding: '1rem',
+    margin: '1rem',
     minWidth: '250px',
-    position: 'fixed',
+    // position: 'fixed',
   },
   friendBox: {
     width: '50%',
@@ -31,13 +35,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FriendsBox = (props) => {
+  const history = useHistory();
   const classes = useStyles();
   const [value, setValue] = useState('');
-  const onChange = (e) => {
-    setValue(e.target.value);
+  const [searchList, setSearchList] = useState([]);
+
+  const getUsers = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/users`);
+
+      // console.log(response.data.response);
+      setSearchList(response.data.response);
+    } catch (err) {
+      console.log(err);
+    }
   };
   const onAdd = () => {
-    props.onAdd(value);
+    props.onAdd(value.username);
     setValue('');
   };
 
@@ -45,6 +59,14 @@ const FriendsBox = (props) => {
     // console.log(id);
     props.onDeleteFriend(id);
   };
+
+  const seeProfile = (id) => {
+    history.push(`/profile/${id}`);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <Grid className={classes.friendsWidth}>
@@ -66,9 +88,10 @@ const FriendsBox = (props) => {
                       alignItems="center"
                     >
                       <Typography
-                        className={classes.title}
+                        className={'friend'}
                         color="textSecondary"
                         gutterBottom
+                        onClick={() => seeProfile(friend.id)}
                       >
                         {friend.first_name + ' ' + friend.last_name}
                       </Typography>
@@ -112,15 +135,34 @@ const FriendsBox = (props) => {
               container
               alignItems="center"
               justify="center"
-              style={{ width: '70%' }}
+              style={{ width: '70%', position: 'relative' }}
             >
-              <TextField
+              {/* <Autocomplete
+                id="combo-box-demo"
+                options={searchList}
+                getOptionLabel={(option) => option.title}
+                style={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Combo box" variant="outlined" />
+                )}
+              /> */}
+              <Autocomplete
+                id="combo-box-demo"
                 value={value}
-                id="standard-search"
-                label="Search field"
-                type="search"
-                autoFocus
-                onChange={onChange}
+                fullWidth
+                options={searchList}
+                getOptionLabel={(option) => option.username}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    id="standard-search"
+                    label="Search by email"
+                    type="search"
+                  />
+                )}
               />
             </Grid>
             <Grid

@@ -1,8 +1,16 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
 const router = require('express').Router();
+const crypto = require('crypto');
+const detect = require('detect-file-type');
 const smtpCredentials = require('../config/smtp_credentials');
 
+const formidableMiddleware = require('express-formidable');
+
 const User = require('../models/User');
+const Friend = require('../models/Friend');
+const SavedArticles = require('../models/Saved_articles');
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -21,12 +29,195 @@ const saltRounds = 10;
 //     console.log("it is the same? ", isSame);
 // })
 
-//CREATE ROUTE FOR TOKEN WITH crypto
+router.get('/publicProfile/:id', async (req, res) => {
+  let { id } = req.params;
+  if (!req.session.user) {
+    return res.status(401).send({
+      response: 'You cant access this endpoint without being authenticated',
+    });
+  }
+
+  try {
+    const friendship = await Friend.query()
+      .select()
+      .where({
+        user_1_id: req.session.user.id,
+        user_2_id: id,
+        status: 1,
+      })
+      .orWhere({
+        user_1_id: id,
+        user_2_id: req.session.user.id,
+        status: 1,
+      });
+    // console.log(id);
+
+    if (!friendship[0]) {
+      return res
+        .status(500)
+        .send({ response: 'You are not allowed to see this profile.' });
+    }
+
+    // return his articles
+    // return his data
+
+    const articles = await SavedArticles.query()
+      .select()
+      .where({ owner_id: id });
+
+    const profile = await User.query()
+      .select(
+        'first_name as firstName',
+        'last_name as lastName',
+        'username',
+        'image_url as imageUrl'
+      )
+      .where({ id: id });
+
+    return res.status(200).send({ articles, profile: profile[0] });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ response: 'Something went wrong.' });
+  }
+});
+
+router.get('/users', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send({
+      response: 'You cant access this endpoint without being authenticated',
+    });
+  }
+
+  try {
+    const users = await User.query().select(
+      'first_name',
+      'last_name',
+      'username'
+    );
+
+    return res.status(200).send({ response: users });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ response: 'Something went wrong.' });
+  }
+});
+
+router.delete('/users', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send({
+      response: 'You cant access this endpoint without being authenticated',
+    });
+  }
+
+  try {
+    await User.query()
+      .update({ is_active: 0 })
+      .where({ id: req.session.user.id });
+
+    return res.status(200).send({ response: 'Deleted successfully.' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ response: 'Something went wrong.' });
+  }
+});
+
+router.put('/users', formidableMiddleware(), async (req, res) => {
+  const { firstName, lastName, username } = req.fields;
+
+  if (!req.session.user) {
+    return res.status(401).send({
+      response: 'You cant access this endpoint without being authenticated',
+    });
+  }
+
+  const file = req.files;
+
+  if (file.file) {
+    detect.fromFile(file.file.path, (err, result) => {
+      if (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .send({ response: 'Something went wrong when reading the file.' });
+      }
+      const imageName = Date.now() + '-' + file.file.name;
+
+      const allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+      const oldPath = file.file.path;
+      const newPath = path.join(__dirname, '..', 'static', imageName);
+
+      if (!allowedExtensions.includes(result.ext)) {
+        return res.status(500).send({ response: 'Not supported extension.' });
+      }
+
+      fs.copyFile(oldPath, newPath, async (err) => {
+        if (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .send({ response: 'Something went wrong when moving the file.' });
+        }
+
+        try {
+          await User.query()
+            .update({
+              username: username,
+              first_name: firstName,
+              last_name: lastName,
+              image_url: '/static/' + imageName,
+            })
+            .where({ id: req.session.user.id });
+
+          const user = await User.query()
+            .select()
+            .where({ id: req.session.user.id });
+          if (!user[0]) {
+            return res
+              .status(404)
+              .send({ response: 'We could not find the user' });
+          }
+
+          user[0].password = '';
+          return res.status(200).send({ response: user[0] });
+        } catch (err) {
+          console.log(err);
+          return res.status(500).send({ response: 'Something went wrong.' });
+        }
+      });
+    });
+  } else {
+    try {
+      await User.query()
+        .update({
+          username: username,
+          first_name: firstName,
+          last_name: lastName,
+        })
+        .where({ id: req.session.user.id });
+
+      const user = await User.query()
+        .select()
+        .where({ id: req.session.user.id });
+      if (!user[0]) {
+        return res.status(404).send({ response: 'We could not find the user' });
+      }
+
+      user[0].password = '';
+      return res.status(200).send({ response: user[0] });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({ response: 'Something went wrong.' });
+    }
+  }
+  // console.log(globalImageName);
+  // we want to update the user
+});
 
 router.put('/users/confirmResetPassword', async (req, res) => {
-  const { id, password, confirmPassword } = req.body;
+  const { token, password, confirmPassword } = req.body;
 
-  if (!id || !password || !confirmPassword) {
+  if (!token || !password || !confirmPassword) {
     return res.status(400).send({
       message: 'Missing fields',
     });
@@ -41,7 +232,7 @@ router.put('/users/confirmResetPassword', async (req, res) => {
   try {
     const userPassword = await User.query()
       .select('password')
-      .where({ id: id });
+      .where({ token: token });
 
     // checking if the given password is the same as the previous password
     bcrypt.compare(password, userPassword[0].password, (error, isSame) => {
@@ -71,7 +262,7 @@ router.put('/users/confirmResetPassword', async (req, res) => {
             password: hashedPassword,
             token: null,
           })
-          .where({ id: id });
+          .where({ token: token });
 
         return res.status(200).send({
           message: 'Your password is successfully reseted!',
@@ -100,15 +291,21 @@ router.post('/users/resetPassword', async (req, res) => {
         })
         .limit(1);
 
-      console.log(users);
+      // console.log(users);
 
       if (!users[0]) {
         return res.status(404).send({
           message: 'This user does not exist',
         });
       } else {
-        // create a token with b-crypt
+        // create a token with crypto
         // add token to db
+        let token = crypto.randomBytes(64).toString('hex');
+        const addToken = await User.query()
+          .update({ token: token })
+          .where({ id: users[0].id });
+
+        console.log('token: ', addToken);
 
         // create output for the body of the email
         const output = `<!doctype html>
@@ -160,7 +357,7 @@ router.post('/users/resetPassword', async (req, res) => {
                                                     password has been generated for you. To reset your password, click the
                                                     following link and follow the instructions.
                                                 </p>
-                                                <a href="http://localhost:3000/resetForm/${users[0].id}"
+                                                <a href="http://localhost:3000/resetForm/${token}"
                                                     style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
                                                     Password</a>
                                             </td>
@@ -221,7 +418,8 @@ router.post('/users/resetPassword', async (req, res) => {
             });
           }
 
-          console.log(info);
+          // console.log(info);
+          console.log('email is sent');
           res.status(200).send({
             message: 'Email is sent!',
           });
@@ -243,6 +441,7 @@ router.post('/users/login', async (req, res) => {
       const users = await User.query()
         .where({
           username: username,
+          is_active: 1,
         })
         .limit(1);
 

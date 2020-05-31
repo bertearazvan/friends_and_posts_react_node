@@ -1,9 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+
 const session = require('express-session');
+var path = require('path');
 //express init
 const app = express();
 
+// Formidable
+
+// app.use(formidableMiddleware);
 // Rate limiter
 
 const rateLimit = require('express-rate-limit');
@@ -54,13 +59,17 @@ app.use(express.json());
 
 const usersRoute = require('./routes/users');
 const friendsRoute = require('./routes/friends');
-const postsRoute = require('./routes/posts');
+const newsRoute = require('./routes/news');
 // set session variable to keep the same sessionID for the whole app
 
 app.use('/users/login', authLimiter);
-app.use(postsRoute);
+app.use(newsRoute);
 app.use(friendsRoute);
 app.use(usersRoute);
+
+// General routes
+
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // Setup the database
 

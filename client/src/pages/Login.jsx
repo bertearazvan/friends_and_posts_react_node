@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     marginTop: '2rem',
   },
+  formContainer: {
+    height: '65vh',
+    padding: '0px 1rem',
+  },
 }));
 
 // Login component
@@ -20,7 +24,7 @@ const Login = (props) => {
   const history = useHistory();
 
   if (localStorage.getItem('user')) {
-    history.push('/posts');
+    history.push('/news');
   }
 
   // set form state
@@ -33,7 +37,7 @@ const Login = (props) => {
   const [openAlert, setOpenAlert] = useState(false);
 
   // for knowing where to redirect the user, if it got redirected to to not auth
-  const from = props.location.state || { from: { pathname: '/posts' } };
+  const from = props.location.state || { from: { pathname: '/news' } };
   // localStorage.removeItem('user');
 
   // set form values
@@ -110,11 +114,11 @@ const Login = (props) => {
         </Box>
       </Grid>
       <Grid
+        className={classes.formContainer}
         container
         direction="row"
         justify="center"
         alignItems="center"
-        style={{ height: '60vh' }}
       >
         <Box>
           <h2>Log in</h2>

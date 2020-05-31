@@ -10,6 +10,10 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     marginTop: '2rem',
   },
+  formContainer: {
+    height: '65vh',
+    padding: '0px 1rem',
+  },
 }));
 
 const Signup = () => {
@@ -39,7 +43,7 @@ const Signup = () => {
   const onSignup = async (e) => {
     e.preventDefault();
     try {
-      let response = await axios.post('http://localhost:8080/users/register', {
+      await axios.post('http://localhost:8080/users/register', {
         firstName: form.firstName,
         lastName: form.lastName,
         repeatPassword: form.repeatPassword,
@@ -47,7 +51,6 @@ const Signup = () => {
         password: form.password,
       });
 
-      let data = response.data;
       setForm({
         message: {
           message: 'The user has been created',
@@ -60,7 +63,7 @@ const Signup = () => {
         repeatPassword: '',
       });
       setOpenAlert(true);
-      console.log('Success:', data);
+      // console.log('Success:', data);
     } catch (err) {
       console.log('Failed:', err.response.data.message);
       setForm({
@@ -101,18 +104,20 @@ const Signup = () => {
         direction="row"
         justify="center"
         alignItems="center"
-        style={{ height: '60vh' }}
+        className={classes.formContainer}
       >
         <Box>
+          <br />
           <h2>Sign up</h2>
           <Box>
             <form id="dashboardLoginForm">
-              <Grid container spacing={2}>
-                <Grid item>
+              <Grid container spacing={1}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
                     required
+                    fullWidth
                     id="firstName"
                     label="First name"
                     name="firstName"
@@ -121,11 +126,12 @@ const Signup = () => {
                     onChange={handleChange('firstName')}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
                     required
+                    fullWidth
                     id="lastName"
                     label="Last name"
                     name="lastName"
@@ -134,6 +140,7 @@ const Signup = () => {
                   />
                 </Grid>
               </Grid>
+
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -145,12 +152,13 @@ const Signup = () => {
                 value={form.email}
                 onChange={handleChange('email')}
               />
-              <Grid container spacing={2}>
-                <Grid item>
+              <Grid container spacing={1}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
                     required
+                    fullWidth
                     name="password"
                     label="Password"
                     type="password"
@@ -159,11 +167,12 @@ const Signup = () => {
                     onChange={handleChange('password')}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
                     required
+                    fullWidth
                     name="repeatPassword"
                     label="Repeat password"
                     type="password"

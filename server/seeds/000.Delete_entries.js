@@ -4,9 +4,6 @@ exports.seed = function (knex) {
   return knex('friends')
     .del()
     .then(() => {
-      return knex('posts').del();
-    })
-    .then(() => {
       return knex('users').del();
     })
     .then(() => {

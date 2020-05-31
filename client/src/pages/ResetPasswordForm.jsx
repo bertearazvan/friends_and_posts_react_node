@@ -10,6 +10,10 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     marginTop: '2rem',
   },
+  formContainer: {
+    height: '65vh',
+    padding: '0px 1rem',
+  },
 }));
 
 const ResetPasswordForm = (props) => {
@@ -36,7 +40,7 @@ const ResetPasswordForm = (props) => {
       let response = await axios.put(
         'http://localhost:8080/users/confirmResetPassword',
         {
-          id: props.match.params.id,
+          token: props.match.params.token,
           password: form.password,
           confirmPassword: form.repeatPassword,
         }
@@ -49,7 +53,7 @@ const ResetPasswordForm = (props) => {
         password: '',
       });
       setOpenAlert(true);
-      console.log('Success:', data);
+      // console.log('Success:', data);
       //   history.push('/');
     } catch (err) {
       console.log('Failed:', err.response.data);
@@ -98,7 +102,7 @@ const ResetPasswordForm = (props) => {
         direction="row"
         justify="center"
         alignItems="center"
-        style={{ height: '60vh' }}
+        className={classes.formContainer}
       >
         <Box>
           <h2>Reset password</h2>
