@@ -48,7 +48,7 @@ const News = (props) => {
 
   const getSources = async () => {
     try {
-      let response = await axios.get('http://localhost:8080/news/sources');
+      let response = await axios.get('http://ec2-54-234-36-236.compute-1.amazonaws.com/news/sources');
       setSources(response.data.sources);
       // console.log(response.data.sources);
     } catch (err) {
@@ -69,7 +69,7 @@ const News = (props) => {
       setLoading(true);
       if (form.type === 'headlines') {
         let response = await axios.get(
-          'http://localhost:8080/news/top-headlines',
+          'http://ec2-54-234-36-236.compute-1.amazonaws.com/news/top-headlines',
           {
             params: {
               channels: form.channels,
@@ -87,7 +87,7 @@ const News = (props) => {
 
       if (form.type === 'everything') {
         let response = await axios.get(
-          'http://localhost:8080/news/everything',
+          'http://ec2-54-234-36-236.compute-1.amazonaws.com/news/everything',
           {
             params: {
               sortBy: form.sort,
@@ -120,7 +120,7 @@ const News = (props) => {
   const onSaveArticle = async (article) => {
     // console.log(article);
     try {
-      let response = await axios.post('http://localhost:8080/news/save', {
+      let response = await axios.post('http://ec2-54-234-36-236.compute-1.amazonaws.com/news/save', {
         author: article.author,
         source: article.source.name,
         title: article.title,
@@ -198,17 +198,17 @@ const News = (props) => {
                     );
                   })
                 ) : (
-                  <Grid container items="center" justify="center">
-                    <Typography variant="h5" component="h2">
-                      Sorry, no news were found...
+                    <Grid container items="center" justify="center">
+                      <Typography variant="h5" component="h2">
+                        Sorry, no news were found...
                     </Typography>
-                  </Grid>
-                )
+                    </Grid>
+                  )
               ) : (
-                <Grid container items="center" justify="center">
-                  <DotLoader color={'#123abc'} />
-                </Grid>
-              )}
+                  <Grid container items="center" justify="center">
+                    <DotLoader color={'#123abc'} />
+                  </Grid>
+                )}
             </Grid>
           </Grid>
         </Box>

@@ -38,7 +38,7 @@ const SavedArticles = () => {
     setArticles([]);
     try {
       let response = await axios.get(
-        'http://localhost:8080/news/saved-articles'
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/news/saved-articles'
       );
       // console.log(response.data.response);
 
@@ -59,7 +59,7 @@ const SavedArticles = () => {
 
   const onDeleteArticle = async (article) => {
     try {
-      await axios.delete(`http://localhost:8080/news/saved/${article.id}`);
+      await axios.delete(`http://ec2-54-234-36-236.compute-1.amazonaws.com/news/saved/${article.id}`);
       // console.log(response.data.response);
       getArticles();
     } catch (err) {
@@ -113,13 +113,13 @@ const SavedArticles = () => {
               );
             })
           ) : (
-            'Sorry there are no saved articles'
-          )
+              'Sorry there are no saved articles'
+            )
         ) : (
-          <Grid container items="center" justify="center">
-            <DotLoader color={'#123abc'} />
-          </Grid>
-        )}
+            <Grid container items="center" justify="center">
+              <DotLoader color={'#123abc'} />
+            </Grid>
+          )}
       </Grid>
     </Container>
   );

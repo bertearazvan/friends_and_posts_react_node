@@ -76,8 +76,8 @@ const Profile = (props) => {
   const getRequests = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:8080/friends/pending',
-        { credentials: 'same-origin' }
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/pending',
+
       );
       const data = await response.data;
       // console.log('requests', data);
@@ -99,8 +99,8 @@ const Profile = (props) => {
   const acceptRequest = async (id) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/friends/accept/${id}`,
-        { credentials: 'same-origin' }
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/accept/${id}`,
+
       );
       const data = await response.data;
       // console.log('accept request', data.message);
@@ -127,8 +127,8 @@ const Profile = (props) => {
   const declineRequest = async (id) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/friends/reject/${id}`,
-        { credentials: 'same-origin' }
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/reject/${id}`,
+
       );
       const data = await response.data;
       // console.log('reject request', data.message);
@@ -154,9 +154,7 @@ const Profile = (props) => {
 
   const getFriends = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/friends', {
-        credentials: 'same-origin',
-      });
+      const response = await axios.get('http://ec2-54-234-36-236.compute-1.amazonaws.com/friends');
       const data = response.data;
       setFriends(data);
       // return data;
@@ -175,8 +173,7 @@ const Profile = (props) => {
   const addFriend = async (username) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/friends/request/${username}`,
-        { credentials: 'same-origin' }
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/request/${username}`
       );
       const data = response.data;
       // console.log('add friend', data);
@@ -227,7 +224,7 @@ const Profile = (props) => {
 
   const onDeleteProfile = async () => {
     try {
-      await axios.delete(`http://localhost:8080/users`);
+      await axios.delete(`http://ec2-54-234-36-236.compute-1.amazonaws.com/users`);
 
       localStorage.removeItem('user');
       history.push('/');
@@ -253,7 +250,7 @@ const Profile = (props) => {
     data.append('username', form.username);
 
     try {
-      const response = await axios.put(`http://localhost:8080/users`, data);
+      const response = await axios.put(`http://ec2-54-234-36-236.compute-1.amazonaws.com/users`, data);
 
       // console.log('newUser', response.data.response);
 
@@ -289,8 +286,8 @@ const Profile = (props) => {
           onClose={() => setOpenModal(false)}
         />
       ) : (
-        ''
-      )}
+          ''
+        )}
       <Box>
         <Grid container direction="row" justify="center" alignItems="center">
           <Box className={classes.alertBox}>
@@ -348,8 +345,8 @@ const Profile = (props) => {
                     }, '')}
                   </React.Fragment>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
                 <FriendsBox
                   onAdd={onAddFriend}
                   friends={friends}

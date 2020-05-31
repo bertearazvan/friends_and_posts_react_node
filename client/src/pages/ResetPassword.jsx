@@ -35,7 +35,7 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       let response = await axios.post(
-        'http://localhost:8080/users/resetPassword',
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/users/resetPassword',
         {
           username: form.email,
         }

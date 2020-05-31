@@ -38,7 +38,7 @@ const ResetPasswordForm = (props) => {
     e.preventDefault();
     try {
       let response = await axios.put(
-        'http://localhost:8080/users/confirmResetPassword',
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/users/confirmResetPassword',
         {
           token: props.match.params.token,
           password: form.password,

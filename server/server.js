@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-
+const helmet = require("helmet");
+const path = require("path");
 const session = require('express-session');
-var path = require('path');
 //express init
 const app = express();
 
@@ -17,15 +17,17 @@ const authLimiter = rateLimit({
   max: 5, // limit each IP to 100 requests per windowMs
 });
 
-app.enable('trust proxy');
+// app.enable('trust proxy');
+app.use(helmet());
 
 // Middleware config
 app.use(
-  cors({
-    origin: ['http://localhost:8080', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true, // enable set cookie
-  })
+  // cors({
+  //   origin: ['http://localhost:8080', 'http://localhost:3000'],
+  //   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  //   credentials: true, // enable set cookie
+  // })
+  cors()
 );
 
 // app.options('*', cors());
@@ -70,6 +72,7 @@ app.use(usersRoute);
 // General routes
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use("/", express.static(path.join(__dirname, "public")))
 
 // Setup the database
 
@@ -82,9 +85,13 @@ const knex = Knex(knexFile.development);
 //Give the knex instance to objection
 Model.knex(knex);
 
+// serve build
+
+
+
 //Server running
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 80;
 
 const server = app.listen(port, (err) => {
   if (err) {
@@ -92,5 +99,5 @@ const server = app.listen(port, (err) => {
     return;
   }
 
-  return console.log('Server is listening to port', server.address().port);
+  return console.log('Server is listening to port ', server.address().port, "...");
 });

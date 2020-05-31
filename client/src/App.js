@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.css';
-import {} from '@material-ui/core';
+import { } from '@material-ui/core';
 import NavBar from './components/NavBar';
 import {
   BrowserRouter as Router,
@@ -25,7 +25,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/users/session');
+        const response = await axios.get('http://ec2-54-234-36-236.compute-1.amazonaws.com/users/session');
         const data = response.data;
         // console.log(data.data);
         localStorage.setItem('user', JSON.stringify(data.data));
@@ -45,13 +45,13 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
         auth === true || localStorage.getItem('user') ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: props.location },
-            }}
-          />
-        )
+            <Redirect
+              to={{
+                pathname: '/',
+                state: { from: props.location },
+              }}
+            />
+          )
       }
     />
   );

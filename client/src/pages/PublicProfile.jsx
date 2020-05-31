@@ -51,7 +51,7 @@ const ResetPassword = () => {
   const getProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/publicProfile/${id}`
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/publicProfile/${id}`
       );
 
       setArticles(response.data.articles);
@@ -117,17 +117,17 @@ const ResetPassword = () => {
                     );
                   })
                 ) : (
-                  <Grid container items="center" justify="center">
-                    <Typography variant="h5" component="h2">
-                      Sorry, no news were found...
+                    <Grid container items="center" justify="center">
+                      <Typography variant="h5" component="h2">
+                        Sorry, no news were found...
                     </Typography>
-                  </Grid>
-                )
+                    </Grid>
+                  )
               ) : (
-                <Grid container items="center" justify="center">
-                  <DotLoader color={'#123abc'} />
-                </Grid>
-              )}
+                  <Grid container items="center" justify="center">
+                    <DotLoader color={'#123abc'} />
+                  </Grid>
+                )}
             </Grid>
             <Grid item xs={12} sm={6}>
               <Card className={'articleCard'} variant="outlined">
@@ -167,8 +167,8 @@ const ResetPassword = () => {
             </Grid>
           </Grid>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </Box>
     </Container>
   );

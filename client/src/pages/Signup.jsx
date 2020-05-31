@@ -43,7 +43,7 @@ const Signup = () => {
   const onSignup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/users/register', {
+      await axios.post('http://ec2-54-234-36-236.compute-1.amazonaws.com/users/register', {
         firstName: form.firstName,
         lastName: form.lastName,
         repeatPassword: form.repeatPassword,

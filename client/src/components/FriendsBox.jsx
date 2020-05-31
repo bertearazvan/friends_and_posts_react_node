@@ -42,7 +42,7 @@ const FriendsBox = (props) => {
 
   const getUsers = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/users`);
+      const response = await axios.get(`http://ec2-54-234-36-236.compute-1.amazonaws.com/users`);
 
       // console.log(response.data.response);
       setSearchList(response.data.response);
@@ -116,16 +116,16 @@ const FriendsBox = (props) => {
               })}
             </Grid>
           ) : (
-            <Box>
-              <Typography
-                className={classes.title}
-                color="textSecondary"
-                gutterBottom
-              >
-                You don't have a friend yet
+              <Box>
+                <Typography
+                  className={classes.title}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  You don't have a friend yet
               </Typography>
-            </Box>
-          )}
+              </Box>
+            )}
 
           <br />
           <hr />

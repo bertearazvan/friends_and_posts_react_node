@@ -52,7 +52,7 @@ const Login = (props) => {
 
     try {
       // try logging in to the backend
-      let response = await axios.post('http://localhost:8080/users/login', {
+      let response = await axios.post('http://ec2-54-234-36-236.compute-1.amazonaws.com/users/login', {
         username: form.email,
         password: form.password,
       });
