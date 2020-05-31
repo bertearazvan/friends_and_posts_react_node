@@ -1,6 +1,6 @@
-# Chemical industy A/S project
+# Friends, posts and news project
 
-### This is a project for the Development Environments module
+### This is a project for the Node React module
 
 ## Overview
 
