@@ -54,7 +54,9 @@ const Profile = (props) => {
     firstName: props.userData.first_name,
     lastName: props.userData.last_name,
     username: props.userData.username,
-    pictureUrl: 'http://localhost:8080' + props.userData.image_url,
+    pictureUrl:
+      'http://ec2-54-234-36-236.compute-1.amazonaws.com' +
+      props.userData.image_url,
     changed: false,
     profileImage: '',
   });
@@ -76,8 +78,7 @@ const Profile = (props) => {
   const getRequests = async () => {
     try {
       const response = await axios.get(
-        'http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/pending',
-
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/pending'
       );
       const data = await response.data;
       // console.log('requests', data);
@@ -99,8 +100,7 @@ const Profile = (props) => {
   const acceptRequest = async (id) => {
     try {
       const response = await axios.put(
-        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/accept/${id}`,
-
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/accept/${id}`
       );
       const data = await response.data;
       // console.log('accept request', data.message);
@@ -127,8 +127,7 @@ const Profile = (props) => {
   const declineRequest = async (id) => {
     try {
       const response = await axios.put(
-        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/reject/${id}`,
-
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/reject/${id}`
       );
       const data = await response.data;
       // console.log('reject request', data.message);
@@ -154,7 +153,9 @@ const Profile = (props) => {
 
   const getFriends = async () => {
     try {
-      const response = await axios.get('http://ec2-54-234-36-236.compute-1.amazonaws.com/friends');
+      const response = await axios.get(
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/friends'
+      );
       const data = response.data;
       setFriends(data);
       // return data;
@@ -224,7 +225,9 @@ const Profile = (props) => {
 
   const onDeleteProfile = async () => {
     try {
-      await axios.delete(`http://ec2-54-234-36-236.compute-1.amazonaws.com/users`);
+      await axios.delete(
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/users`
+      );
 
       localStorage.removeItem('user');
       history.push('/');
@@ -250,7 +253,10 @@ const Profile = (props) => {
     data.append('username', form.username);
 
     try {
-      const response = await axios.put(`http://ec2-54-234-36-236.compute-1.amazonaws.com/users`, data);
+      const response = await axios.put(
+        `http://ec2-54-234-36-236.compute-1.amazonaws.com/users`,
+        data
+      );
 
       // console.log('newUser', response.data.response);
 
@@ -286,8 +292,8 @@ const Profile = (props) => {
           onClose={() => setOpenModal(false)}
         />
       ) : (
-          ''
-        )}
+        ''
+      )}
       <Box>
         <Grid container direction="row" justify="center" alignItems="center">
           <Box className={classes.alertBox}>
@@ -345,8 +351,8 @@ const Profile = (props) => {
                     }, '')}
                   </React.Fragment>
                 ) : (
-                    ''
-                  )}
+                  ''
+                )}
                 <FriendsBox
                   onAdd={onAddFriend}
                   friends={friends}

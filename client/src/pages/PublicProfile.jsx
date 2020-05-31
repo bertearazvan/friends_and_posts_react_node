@@ -117,17 +117,17 @@ const ResetPassword = () => {
                     );
                   })
                 ) : (
-                    <Grid container items="center" justify="center">
-                      <Typography variant="h5" component="h2">
-                        Sorry, no news were found...
-                    </Typography>
-                    </Grid>
-                  )
-              ) : (
                   <Grid container items="center" justify="center">
-                    <DotLoader color={'#123abc'} />
+                    <Typography variant="h5" component="h2">
+                      Sorry, no news were found...
+                    </Typography>
                   </Grid>
-                )}
+                )
+              ) : (
+                <Grid container items="center" justify="center">
+                  <DotLoader color={'#123abc'} />
+                </Grid>
+              )}
             </Grid>
             <Grid item xs={12} sm={6}>
               <Card className={'articleCard'} variant="outlined">
@@ -155,7 +155,10 @@ const ResetPassword = () => {
                     <Grid container justify="center" alignItems="center">
                       <img
                         className={classes.profileImage}
-                        src={'http://localhost:8080' + profile.imageUrl}
+                        src={
+                          'http://ec2-54-234-36-236.compute-1.amazonaws.com' +
+                          profile.imageUrl
+                        }
                         alt="logo"
                       />
                     </Grid>
@@ -167,8 +170,8 @@ const ResetPassword = () => {
             </Grid>
           </Grid>
         ) : (
-            ''
-          )}
+          ''
+        )}
       </Box>
     </Container>
   );
