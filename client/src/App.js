@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.css';
-import {} from '@material-ui/core';
+import { } from '@material-ui/core';
 import NavBar from './components/NavBar';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
@@ -31,6 +31,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
         localStorage.setItem('user', JSON.stringify(data.data));
         // localStorage.removeItem('user');
       } catch (err) {
+        localStorage.removeItem('user');
         history.push('/');
         return;
       }
@@ -46,13 +47,13 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
         auth === true || localStorage.getItem('user') ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: props.location },
-            }}
-          />
-        )
+            <Redirect
+              to={{
+                pathname: '/',
+                state: { from: props.location },
+              }}
+            />
+          )
       }
     />
   );
