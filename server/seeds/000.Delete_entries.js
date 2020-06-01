@@ -6,7 +6,7 @@ exports.seed = function (knex) {
     .then(() => {
       return knex('users').del();
     })
-    .then(() => {
+    s.then(() => {
       return knex('saved_articles').del();
     })
     .then(() => {

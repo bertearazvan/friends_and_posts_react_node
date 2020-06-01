@@ -279,6 +279,8 @@ router.put('/users/confirmResetPassword', async (req, res) => {
 router.post('/users/resetPassword', async (req, res) => {
   const { username } = req.body;
 
+  return res.status(502).send({ message: "Sorry, sending emails does not work in production :(" })
+
   if (!username) {
     return res.status(400).send({
       message: 'Missing fields',
@@ -394,7 +396,7 @@ router.post('/users/resetPassword', async (req, res) => {
         transporter.verify((err, success) => {
           if (err) {
             console.log(err);
-            res.status(502).send({
+            return res.status(502).send({
               message: 'There has been a problem with the mailing service',
             });
           }
@@ -413,14 +415,14 @@ router.post('/users/resetPassword', async (req, res) => {
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
             console.log(err);
-            res.status(502).send({
+            return res.status(502).send({
               message: 'There has been a problem when sending the mail',
             });
           }
 
           // console.log(info);
           console.log('email is sent');
-          res.status(200).send({
+          return res.status(200).send({
             message: 'Email is sent!',
           });
         });
@@ -428,7 +430,7 @@ router.post('/users/resetPassword', async (req, res) => {
       }
     } catch (err) {
       console.log(err);
-      res.status(400).send({ message: 'Something went wrong' });
+      return res.status(400).send({ message: 'Something went wrong' });
     }
   }
 });
