@@ -22,12 +22,12 @@ app.use(helmet());
 
 // Middleware config
 app.use(
-  // cors({
-  //   origin: ['http://localhost:8080', 'http://localhost:3000'],
-  //   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  //   credentials: true, // enable set cookie
-  // })
-  cors()
+  cors({
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true, // enable set cookie
+  })
+  // cors()
 );
 
 // app.options('*', cors());
