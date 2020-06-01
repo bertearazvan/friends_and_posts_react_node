@@ -11,7 +11,6 @@ import Article from '../components/Article';
 const useStyles = makeStyles((theme) => ({
   alertBox: {
     position: 'fixed',
-    marginTop: '2rem',
     marginTop: '3rem',
   },
   profileForm: {
@@ -36,16 +35,17 @@ const useStyles = makeStyles((theme) => ({
 
 const ResetPassword = () => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState([]);
+  const [profile, setProfile] = useState({});
+  const [openAlert, setOpenAlert] = useState(false);
   const [alert, setAlert] = useState({
     message: {
       message: '',
       type: 'info',
     },
   });
-  const [loading, setLoading] = useState(true);
-  const [articles, setArticles] = useState([]);
-  const [profile, setProfile] = useState({});
-  const [openAlert, setOpenAlert] = useState(false);
+
   let { id } = useParams();
 
   const getProfile = async () => {
@@ -57,7 +57,6 @@ const ResetPassword = () => {
       setArticles(response.data.articles);
       setProfile(response.data.profile);
       setLoading(false);
-      // console.log(response.data);
     } catch (err) {
       console.log('Failed:', err);
       setAlert({

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import Alert from '../components/Alert';
 import axios from 'axios';
+
+import Alert from '../components/Alert';
+import { Box, Button, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
 const Signup = () => {
   const classes = useStyles();
   const history = useHistory();
+
+  const [openAlert, setOpenAlert] = useState(false);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -30,10 +33,9 @@ const Signup = () => {
       type: 'info',
     },
   });
-  const [openAlert, setOpenAlert] = useState(false);
 
   if (localStorage.getItem('user')) {
-    history.push('/posts');
+    history.push('/news');
   }
 
   const handleChange = (prop) => (event) => {
@@ -43,13 +45,16 @@ const Signup = () => {
   const onSignup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://ec2-54-234-36-236.compute-1.amazonaws.com/users/register', {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        repeatPassword: form.repeatPassword,
-        username: form.email,
-        password: form.password,
-      });
+      await axios.post(
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/users/register',
+        {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          repeatPassword: form.repeatPassword,
+          username: form.email,
+          password: form.password,
+        }
+      );
 
       setForm({
         message: {
@@ -62,7 +67,9 @@ const Signup = () => {
         lastName: '',
         repeatPassword: '',
       });
+
       setOpenAlert(true);
+      history.push('/');
       // console.log('Success:', data);
     } catch (err) {
       console.log('Failed:', err.response.data.message);

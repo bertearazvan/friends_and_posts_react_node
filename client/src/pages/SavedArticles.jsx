@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Grid, Box } from '@material-ui/core';
-import Alert from '../components/Alert';
-import Article from '../components/Article';
+
 import { makeStyles } from '@material-ui/core/styles';
+import { Container, Grid, Box } from '@material-ui/core';
+import Article from '../components/Article';
+import Alert from '../components/Alert';
 import DotLoader from 'react-spinners/DotLoader';
 
 const useStyles = makeStyles((theme) => ({

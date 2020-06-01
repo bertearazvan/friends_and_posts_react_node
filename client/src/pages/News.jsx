@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Container, Typography } from '@material-ui/core';
-import Alert from '../components/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import DotLoader from 'react-spinners/DotLoader';
 import moment from 'moment';
 
+import Alert from '../components/Alert';
+import DotLoader from 'react-spinners/DotLoader';
 import Article from '../components/Article';
 import NewsFilterBox from '../components/NewsFilterBox';
+import { Box, Grid, Container, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   alertBox: {
@@ -20,21 +20,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const News = (props) => {
+const News = () => {
   const classes = useStyles();
-  const [alert, setAlert] = useState({
-    message: {
-      message: '',
-      type: 'info',
-    },
-  });
+
   const [loading, setLoading] = useState(true);
   const [openAlert, setOpenAlert] = useState(false);
   const [sources, setSources] = useState([]);
   const [articles, setArticles] = useState([]);
   const [form, setForm] = useState({
     channels: ['cnn'],
-    type: 'headlines',
+    type: 'everything',
+  });
+  const [alert, setAlert] = useState({
+    message: {
+      message: '',
+      type: 'info',
+    },
   });
 
   let user = '';
@@ -48,7 +49,9 @@ const News = (props) => {
 
   const getSources = async () => {
     try {
-      let response = await axios.get('http://ec2-54-234-36-236.compute-1.amazonaws.com/news/sources');
+      let response = await axios.get(
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/news/sources'
+      );
       setSources(response.data.sources);
       // console.log(response.data.sources);
     } catch (err) {
@@ -80,7 +83,7 @@ const News = (props) => {
           }
         );
 
-        console.log(response.data.articles);
+        // console.log(response.data.articles);
         setArticles(response.data.articles);
         setLoading(false);
       }
@@ -100,7 +103,7 @@ const News = (props) => {
           }
         );
 
-        console.log(response.data.articles);
+        // console.log(response.data.articles);
         setArticles(response.data.articles);
         setLoading(false);
       }
@@ -120,15 +123,20 @@ const News = (props) => {
   const onSaveArticle = async (article) => {
     // console.log(article);
     try {
-      let response = await axios.post('http://ec2-54-234-36-236.compute-1.amazonaws.com/news/save', {
-        author: article.author,
-        source: article.source.name,
-        title: article.title,
-        imgUrl: article.urlToImage,
-        articleUrl: article.url,
-        description: article.content,
-        publishedAt: moment(article.publishedAt).format('YYYY-MM-DD HH:mm:ss'),
-      });
+      let response = await axios.post(
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/news/save',
+        {
+          author: article.author,
+          source: article.source.name,
+          title: article.title,
+          imgUrl: article.urlToImage,
+          articleUrl: article.url,
+          description: article.content,
+          publishedAt: moment(article.publishedAt).format(
+            'YYYY-MM-DD HH:mm:ss'
+          ),
+        }
+      );
 
       setAlert({
         message: {
@@ -198,27 +206,22 @@ const News = (props) => {
                     );
                   })
                 ) : (
-                    <Grid container items="center" justify="center">
-                      <Typography variant="h5" component="h2">
-                        Sorry, no news were found...
-                    </Typography>
-                    </Grid>
-                  )
-              ) : (
                   <Grid container items="center" justify="center">
-                    <DotLoader color={'#123abc'} />
+                    <Typography variant="h5" component="h2">
+                      Sorry, no news were found...
+                    </Typography>
                   </Grid>
-                )}
+                )
+              ) : (
+                <Grid container items="center" justify="center">
+                  <DotLoader color={'#123abc'} />
+                </Grid>
+              )}
             </Grid>
           </Grid>
         </Box>
       </Container>
     );
-
-    // input to add a friend
-    // card with friends
-    // you can block any friend
-    // see posts
   } else {
     return (
       <Grid container direction="row" justify="center" alignItems="center">
