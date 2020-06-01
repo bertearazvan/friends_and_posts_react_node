@@ -58,7 +58,9 @@ export default function NavBar(props) {
     localStorage.removeItem('user');
     props.onAuth(false);
     try {
-      await axios.get('http://ec2-54-234-36-236.compute-1.amazonaws.com/users/signout');
+      await axios.get(
+        'http://ec2-54-234-36-236.compute-1.amazonaws.com/users/signout'
+      );
       setOpen(false);
       return;
     } catch (err) {
@@ -79,7 +81,7 @@ export default function NavBar(props) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          Posts with friends
+          News with friends
         </Typography>
       </Toolbar>
       <SwipeableDrawer
@@ -133,31 +135,31 @@ export default function NavBar(props) {
             </ListItem>
           </List>
         ) : (
-            <List>
-              <ListItem
-                button
-                component={Link}
-                to="/"
-                onClick={() => setOpen(false)}
-              >
-                <ListItemIcon>
-                  <ExitToAppIcon />
-                </ListItemIcon>
-                <ListItemText primary={'Login'} />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/signup"
-                onClick={() => setOpen(false)}
-              >
-                <ListItemIcon>
-                  <PostAddIcon />
-                </ListItemIcon>
-                <ListItemText primary={'Sign up'} />
-              </ListItem>
-            </List>
-          )}
+          <List>
+            <ListItem
+              button
+              component={Link}
+              to="/"
+              onClick={() => setOpen(false)}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Login'} />
+            </ListItem>
+            <ListItem
+              button
+              component={Link}
+              to="/signup"
+              onClick={() => setOpen(false)}
+            >
+              <ListItemIcon>
+                <PostAddIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Sign up'} />
+            </ListItem>
+          </List>
+        )}
       </SwipeableDrawer>
     </div>
   );

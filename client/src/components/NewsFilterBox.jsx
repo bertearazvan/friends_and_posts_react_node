@@ -115,7 +115,7 @@ const NewsFilterBox = (props) => {
     channels: ['cnn'],
     categories: '',
     phrase: '',
-    type: 'headlines',
+    type: 'everything',
     languages: '',
     sort: '',
     fromDate: new Date(),
@@ -339,7 +339,7 @@ const NewsFilterBox = (props) => {
                         fullWidth
                         id="date-picker-dialog"
                         label="From"
-                        format="MM/dd/yyyy"
+                        format="yyyy/MM/dd"
                         value={form.fromDate}
                         onChange={handleChange('fromDate')}
                         KeyboardButtonProps={{
@@ -353,7 +353,7 @@ const NewsFilterBox = (props) => {
                         margin="normal"
                         id="date-picker-dialog"
                         label="To"
-                        format="MM/dd/yyyy"
+                        format="yyyy/MM/dd"
                         value={form.toDate}
                         onChange={handleChange('toDate')}
                         KeyboardButtonProps={{

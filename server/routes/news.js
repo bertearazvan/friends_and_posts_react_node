@@ -70,12 +70,12 @@ router.get('/news/everything', async (req, res) => {
   try {
     const headlines = await newsapi.v2.everything({
       q: phrase === undefined ? '' : phrase,
-      from: from === undefined ? '' : moment(from).format('DD-MM-YY'),
+      from: from === undefined ? '' : moment(from).format('YY-MM-DD'),
       sources: channels === undefined ? '' : channels,
       language: languages === undefined ? '' : languages,
       size: 100,
       sortBy: sortBy === undefined ? '' : sortBy,
-      to: to === undefined ? '' : moment(to).format('DD-MM-YY'),
+      to: to === undefined ? '' : moment(to).format('YY-MM-DD'),
     });
 
     return res.status(200).send(headlines);

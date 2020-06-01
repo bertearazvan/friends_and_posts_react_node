@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Alert from '../components/Alert';
 import FriendsBox from '../components/FriendsBox';
 import ModalDialog from '../components/ModalDialog';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import {
   Container,
   Card,
@@ -12,13 +13,12 @@ import {
   TextField,
   IconButton,
 } from '@material-ui/core';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles((theme) => ({
   card: {
-    // position: 'relative',
     padding: '1rem',
     margin: '1rem',
   },
@@ -39,17 +39,17 @@ const useStyles = makeStyles((theme) => ({
 const Profile = (props) => {
   const classes = useStyles();
   const history = useHistory();
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [image, setImage] = useState(null);
   const [state, setState] = useState({
     message: {
       message: '',
       type: 'info',
     },
   });
-  const [openAlert, setOpenAlert] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [friends, setFriends] = useState([]);
-  const [requests, setRequests] = useState([]);
-  const [image, setImage] = useState(null);
   const [form, setForm] = React.useState({
     firstName: props.userData.first_name,
     lastName: props.userData.last_name,
@@ -60,7 +60,6 @@ const Profile = (props) => {
     changed: false,
     profileImage: '',
   });
-  // console.log(props.userData);
 
   // set form values
   const handleChange = (prop) => (event) => {
@@ -80,13 +79,11 @@ const Profile = (props) => {
       const response = await axios.get(
         'http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/pending'
       );
+
       const data = await response.data;
-      // console.log('requests', data);
 
       setRequests(data);
-      // return data;
     } catch (err) {
-      // console.log('Failed:', err.response.data.message);
       setState({
         message: {
           message: err.response.data.message,
@@ -103,7 +100,7 @@ const Profile = (props) => {
         `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/accept/${id}`
       );
       const data = await response.data;
-      // console.log('accept request', data.message);
+
       setState({
         message: {
           message: data.message,
@@ -130,13 +127,14 @@ const Profile = (props) => {
         `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/reject/${id}`
       );
       const data = await response.data;
-      // console.log('reject request', data.message);
+
       setState({
         message: {
           message: data.message,
           type: 'success',
         },
       });
+
       setOpenAlert(true);
       setRequests(requests.filter((request) => request.id !== id));
     } catch (err) {
@@ -158,7 +156,6 @@ const Profile = (props) => {
       );
       const data = response.data;
       setFriends(data);
-      // return data;
     } catch (err) {
       console.log('Failed:', err.response.data.message);
       setState({
@@ -177,7 +174,7 @@ const Profile = (props) => {
         `http://ec2-54-234-36-236.compute-1.amazonaws.com/friends/request/${username}`
       );
       const data = response.data;
-      // console.log('add friend', data);
+
       setState({
         message: {
           message: data.message,
@@ -258,18 +255,15 @@ const Profile = (props) => {
         data
       );
 
-      // console.log('newUser', response.data.response);
-
       setState({
         message: {
           message: 'Profile successfully updated.',
           type: 'success',
         },
       });
+
       setOpenAlert(true);
       localStorage.setItem('user', JSON.stringify(response.data.response));
-      // console.log(data);
-      // return data;
     } catch (err) {
       console.log('Failed:', err);
       setState({

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid, TextField } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
-import Alert from '../components/Alert';
 import axios from 'axios';
+
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { Box, Button, Grid, TextField } from '@material-ui/core';
+import Alert from '../components/Alert';
 
 const useStyles = makeStyles((theme) => ({
   alertBox: {
@@ -19,16 +20,13 @@ const useStyles = makeStyles((theme) => ({
 const ResetPasswordForm = (props) => {
   const classes = useStyles();
   const history = useHistory();
+
+  const [openAlert, setOpenAlert] = useState(false);
   const [form, setForm] = useState({
     password: '',
     repeatPassword: '',
     message: { message: '', type: 'info' },
   });
-  const [openAlert, setOpenAlert] = useState(false);
-
-  // if (localStorage.getItem('user')) {
-  //   history.push('/dashboard');
-  // }
 
   const handleChange = (prop) => (event) => {
     setForm({ ...form, [prop]: event.target.value });
@@ -47,14 +45,13 @@ const ResetPasswordForm = (props) => {
       );
 
       let data = response.data;
+      
       setForm({
         message: { message: data.message, type: 'success' },
         repeatPassword: '',
         password: '',
       });
       setOpenAlert(true);
-      // console.log('Success:', data);
-      //   history.push('/');
     } catch (err) {
       console.log('Failed:', err.response.data);
       setForm({
