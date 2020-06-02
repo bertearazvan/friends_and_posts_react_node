@@ -278,7 +278,7 @@ router.put('/users/confirmResetPassword', async (req, res) => {
 
 router.post('/users/resetPassword', async (req, res) => {
   const { username } = req.body;
-
+  
   return res.status(502).send({ message: "Sorry, sending emails does not work in production :(" })
 
   if (!username) {
