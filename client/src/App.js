@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './App.css';
-import { } from '@material-ui/core';
 import NavBar from './components/NavBar';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
