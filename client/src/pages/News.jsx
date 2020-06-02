@@ -38,11 +38,6 @@ const News = () => {
     },
   });
 
-  let user = '';
-  if (localStorage.getItem('user')) {
-    user = JSON.parse(localStorage.getItem('user'));
-  }
-
   const onFilter = (data) => {
     setForm(data);
   };
@@ -165,73 +160,62 @@ const News = () => {
   // console.log('friends', friends);
   // TODO: add a message.show
 
-  if (user) {
-    return (
-      <Container>
-        <Box>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <Box className={classes.alertBox}>
-              <br />
-              <Alert
-                open={openAlert}
-                onClose={() => setOpenAlert(false)}
-                severity={alert.message.type}
-              >
-                {alert.message.message}
-              </Alert>
-            </Box>
+  return (
+    <Container>
+      <Box>
+        <Grid container direction="row" justify="center" alignItems="center">
+          <Box className={classes.alertBox}>
+            <br />
+            <Alert
+              open={openAlert}
+              onClose={() => setOpenAlert(false)}
+              severity={alert.message.type}
+            >
+              {alert.message.message}
+            </Alert>
+          </Box>
+        </Grid>
+        <Grid
+          style={{ marginTop: '3rem' }}
+          spacing={2}
+          container
+          justify="center"
+        >
+          <Grid item xs={12} sm={6}>
+            <NewsFilterBox
+              sources={sources}
+              onAddFilter={(data) => onFilter(data)}
+            />
           </Grid>
-          <Grid
-            style={{ marginTop: '3rem' }}
-            spacing={2}
-            container
-            justify="center"
-          >
-            <Grid item xs={12} sm={6}>
-              <NewsFilterBox
-                sources={sources}
-                onAddFilter={(data) => onFilter(data)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              {!loading ? (
-                articles.length > 0 ? (
-                  articles.map((article, index) => {
-                    return (
-                      <Article
-                        key={'news-' + index}
-                        article={article}
-                        onSaveArticle={() => onSaveArticle(article)}
-                      />
-                    );
-                  })
-                ) : (
-                  <Grid container items="center" justify="center">
-                    <Typography variant="h5" component="h2">
-                      Sorry, no news were found...
-                    </Typography>
-                  </Grid>
-                )
+          <Grid item xs={12} sm={6}>
+            {!loading ? (
+              articles.length > 0 ? (
+                articles.map((article, index) => {
+                  return (
+                    <Article
+                      key={'news-' + index}
+                      article={article}
+                      onSaveArticle={() => onSaveArticle(article)}
+                    />
+                  );
+                })
               ) : (
                 <Grid container items="center" justify="center">
-                  <DotLoader color={'#123abc'} />
+                  <Typography variant="h5" component="h2">
+                    Sorry, no news were found...
+                  </Typography>
                 </Grid>
-              )}
-            </Grid>
+              )
+            ) : (
+              <Grid container items="center" justify="center">
+                <DotLoader color={'#123abc'} />
+              </Grid>
+            )}
           </Grid>
-        </Box>
-      </Container>
-    );
-  } else {
-    return (
-      <Grid container direction="row" justify="center" alignItems="center">
-        <Box className={classes.alertBox}>
-          <br />
-          <Alert severity={'error'}>Sorry, you have to be logged in</Alert>
-        </Box>
-      </Grid>
-    );
-  }
+        </Grid>
+      </Box>
+    </Container>
+  );
 };
 
 export default News;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Grid, Box, Typography, Button } from '@material-ui/core';
 import Save from '@material-ui/icons/Save';
+import BookmarksRoundedIcon from '@material-ui/icons/BookmarksRounded';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import { useState } from 'react';
@@ -39,7 +40,7 @@ const Article = (props) => {
         <Grid item xs={6}>
           <Grid container justify="flex-end" style={{ position: 'relative' }}>
             {!props.private ? (
-              <Save
+              <BookmarksRoundedIcon
                 className="saveIcon"
                 onClick={() => props.onSaveArticle()}
               />

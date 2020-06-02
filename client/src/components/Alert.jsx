@@ -8,6 +8,9 @@ const Alert = (props) => {
 
   React.useEffect(() => {
     setOpen(props.open);
+    setTimeout(() => {
+      props.onClose(false);
+    }, 2000);
   }, [props.open]);
 
   return (
