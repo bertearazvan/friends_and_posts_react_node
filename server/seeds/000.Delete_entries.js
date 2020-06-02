@@ -7,6 +7,9 @@ exports.seed = function (knex) {
       return knex('users').del();
     })
     .then(() => {
+      return knex('saved_articles').del();
+    })
+    .then(() => {
       return knex('friendship_statuses').del();
     });
 };

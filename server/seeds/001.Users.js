@@ -17,17 +17,20 @@ exports.seed = function (knex) {
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Stefan-Andrei',
       last_name: 'Atudorei',
+      image_url: "/static/andrei.jpg"
     },
     {
       username: 'cassandratiltack@me.com',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Cassandra',
+      image_url: "/static/cass.jpg",
       last_name: 'Tiltack',
     },
     {
       username: 'alin@me.com',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Alin',
+      image_url: "/static/alin.jpg",
       last_name: 'Chiosa',
     },
   ]);
