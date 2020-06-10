@@ -29,6 +29,7 @@ const saltRounds = 10;
 //     console.log("it is the same? ", isSame);
 // })
 
+// get the public profile for the user
 router.get('/publicProfile/:id', async (req, res) => {
   let { id } = req.params;
   if (!req.session.user) {
@@ -37,6 +38,7 @@ router.get('/publicProfile/:id', async (req, res) => {
     });
   }
 
+  // check if the friendship exists with the user
   try {
     const friendship = await Friend.query()
       .select()
@@ -50,8 +52,8 @@ router.get('/publicProfile/:id', async (req, res) => {
         user_2_id: req.session.user.id,
         status: 1,
       });
-    // console.log(id);
 
+    // if the friendship does not exist, we can't view the public profile
     if (!friendship[0]) {
       return res
         .status(500)
@@ -59,12 +61,11 @@ router.get('/publicProfile/:id', async (req, res) => {
     }
 
     // return his articles
-    // return his data
-
     const articles = await SavedArticles.query()
       .select()
       .where({ owner_id: id });
 
+    // return his data
     const profile = await User.query()
       .select(
         'first_name as firstName',
@@ -81,6 +82,7 @@ router.get('/publicProfile/:id', async (req, res) => {
   }
 });
 
+// route for getting all the users (for search friends)
 router.get('/users', async (req, res) => {
   if (!req.session.user) {
     return res.status(401).send({
@@ -102,6 +104,7 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// delete a user by changing is_active to 0
 router.delete('/users', async (req, res) => {
   if (!req.session.user) {
     return res.status(401).send({
@@ -121,6 +124,7 @@ router.delete('/users', async (req, res) => {
   }
 });
 
+// update a user
 router.put('/users', formidableMiddleware(), async (req, res) => {
   const { firstName, lastName, username } = req.fields;
 
@@ -132,6 +136,7 @@ router.put('/users', formidableMiddleware(), async (req, res) => {
 
   const file = req.files;
 
+  // user can also change it's profile picture
   if (file.file) {
     detect.fromFile(file.file.path, (err, result) => {
       if (err) {
@@ -210,10 +215,9 @@ router.put('/users', formidableMiddleware(), async (req, res) => {
       return res.status(500).send({ response: 'Something went wrong.' });
     }
   }
-  // console.log(globalImageName);
-  // we want to update the user
 });
 
+// when the user actually resets their password
 router.put('/users/confirmResetPassword', async (req, res) => {
   const { token, password, confirmPassword } = req.body;
 
@@ -276,10 +280,13 @@ router.put('/users/confirmResetPassword', async (req, res) => {
   }
 });
 
+// form for resetting the password
 router.post('/users/resetPassword', async (req, res) => {
   const { username } = req.body;
-  
-  return res.status(502).send({ message: "Sorry, sending emails does not work in production :(" })
+
+  // return res
+  //   .status(502)
+  //   .send({ message: 'Sorry, sending emails does not work in production :(' });
 
   if (!username) {
     return res.status(400).send({
@@ -293,8 +300,6 @@ router.post('/users/resetPassword', async (req, res) => {
         })
         .limit(1);
 
-      // console.log(users);
-
       if (!users[0]) {
         return res.status(404).send({
           message: 'This user does not exist',
@@ -307,9 +312,7 @@ router.post('/users/resetPassword', async (req, res) => {
           .update({ token: token })
           .where({ id: users[0].id });
 
-        console.log('token: ', addToken);
-
-        // create output for the body of the email
+        // create output for the body of the email (I got a template from the web)
         const output = `<!doctype html>
         <html lang="en-US">
         
@@ -392,7 +395,7 @@ router.post('/users/resetPassword', async (req, res) => {
         </html>`;
         let transporter = nodemailer.createTransport(smtpCredentials);
 
-        // verify connection configuration
+        // verify connection
         transporter.verify((err, success) => {
           if (err) {
             console.log(err);
@@ -410,8 +413,7 @@ router.post('/users/resetPassword', async (req, res) => {
           html: output,
         };
 
-        // try to send email
-
+        // sne dthe email
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
             console.log(err);
@@ -420,13 +422,12 @@ router.post('/users/resetPassword', async (req, res) => {
             });
           }
 
-          // console.log(info);
+          // send confirmation message
           console.log('email is sent');
           return res.status(200).send({
             message: 'Email is sent!',
           });
         });
-        // send confirmation message
       }
     } catch (err) {
       console.log(err);
@@ -435,6 +436,7 @@ router.post('/users/resetPassword', async (req, res) => {
   }
 });
 
+// login the user
 router.post('/users/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -485,6 +487,7 @@ router.post('/users/login', async (req, res) => {
   }
 });
 
+// register the user
 router.post('/users/register', (req, res) => {
   const { username, password, firstName, lastName, repeatPassword } = req.body;
 
@@ -550,6 +553,7 @@ router.post('/users/register', (req, res) => {
   }
 });
 
+// check if the user has a session
 router.get('/users/session', (req, res) => {
   if (req.session.user) {
     return res
@@ -559,7 +563,7 @@ router.get('/users/session', (req, res) => {
     return res.status(401).send({ message: 'You must log in!' });
   }
 });
-
+// signout the user from the be
 router.get('/users/signout', (req, res) => {
   req.session.destroy();
 

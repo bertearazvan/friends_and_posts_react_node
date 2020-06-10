@@ -10,6 +10,7 @@ const newsapi = new NewsAPI('b9b0a45a51a14cceb336c36144b125c6');
 // Create
 // create a post with the given user ID
 
+// delete a saved article
 router.delete('/news/saved/:articleId', async (req, res) => {
   const { articleId } = req.params;
   if (!req.session.user) {
@@ -32,6 +33,7 @@ router.delete('/news/saved/:articleId', async (req, res) => {
   }
 });
 
+// get the top headlines
 router.get('/news/top-headlines', async (req, res) => {
   const { channels, categories, countries, phrase } = req.query;
   if (!req.session.user) {
@@ -39,8 +41,9 @@ router.get('/news/top-headlines', async (req, res) => {
       message: 'You cant access this endpoint without being authenticated',
     });
   }
-  const userId = req.session.user.id;
+  // const userId = req.session.user.id;
 
+  // newsAPI comes with a version for node which I made use of due to cors issues
   try {
     const headlines = await newsapi.v2.topHeadlines({
       q: phrase === undefined ? '' : phrase,
@@ -57,6 +60,7 @@ router.get('/news/top-headlines', async (req, res) => {
   }
 });
 
+// get all the news
 router.get('/news/everything', async (req, res) => {
   const { sortBy, languages, channels, phrase, from, to } = req.query;
   console.log(channels);
@@ -65,7 +69,7 @@ router.get('/news/everything', async (req, res) => {
       message: 'You cant access this endpoint without being authenticated',
     });
   }
-  const userId = req.session.user.id;
+  // const userId = req.session.user.id;
 
   try {
     const headlines = await newsapi.v2.everything({
@@ -85,6 +89,7 @@ router.get('/news/everything', async (req, res) => {
   }
 });
 
+// get the news sources for filtering
 router.get('/news/sources', async (req, res) => {
   if (!req.session.user) {
     return res.status(401).send({
@@ -103,6 +108,7 @@ router.get('/news/sources', async (req, res) => {
   }
 });
 
+// save a post to the saved articles
 router.post('/news/save', async (req, res) => {
   const {
     author,
@@ -131,7 +137,7 @@ router.post('/news/save', async (req, res) => {
       published_at: publishedAt ? publishedAt : null,
       owner_id: req.session.user.id,
     });
-    // console.log(article);
+
     if (article) {
       return res.status(200).send({ response: 'Article saved' });
     }
@@ -141,6 +147,7 @@ router.post('/news/save', async (req, res) => {
   }
 });
 
+// get the saved articles
 router.get('/news/saved-articles', async (req, res) => {
   if (!req.session.user) {
     return res.status(401).send({
@@ -159,10 +166,5 @@ router.get('/news/saved-articles', async (req, res) => {
     return res.status(500).send({ message: err.message });
   }
 });
-
-//^
-//Update
-
-//Delete
 
 module.exports = router;
